@@ -6,6 +6,7 @@ chardet==3.0.4
 click==7.1.2
 Django==3.0.4
 django-split-settings==1.0.0
+djangorestframework==3.12.1
 idna==2.10
 Jinja2==2.11.2
 jinja2-time==0.2.0

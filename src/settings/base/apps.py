@@ -7,6 +7,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # 3d-party apps
+    'rest_framework',
+    'drf_yasg',
+
     # project apps
     'src.apps.books',
 ]
