@@ -1,0 +1,35 @@
+dist: xenial
+
+language: python
+
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9-dev"
+  - "nightly"  # nightly build
+
+services:
+  - postgresql
+
+env:
+  global:
+    - POSTGRES_DB=ci
+    - POSTGRES_USER=postgres
+    - POSTGRES_PASSWORD=postgres
+
+
+before_script:
+  - psql -c "CREATE DATABASE ci;" -U postgres
+
+install:
+  - pip install pipenv
+  - pipenv install --dev
+
+script:
+  - python manage.py check
+  - python manage.py makemigrations --dry-run --check
+  - python manage.py test --noinput
+
+after_success:
+  - codecov
