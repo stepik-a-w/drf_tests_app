@@ -6,7 +6,7 @@ from rest_framework import permissions
 
 schema_view = get_schema_view(
     openapi.Info(
-        title='Stepic DRF tests API',
+        title='Stepik DRF tests API',
         default_version='v1',
     ),
     public=True,
