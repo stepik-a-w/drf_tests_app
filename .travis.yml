@@ -29,6 +29,8 @@ script:
   - python manage.py check
   - python manage.py makemigrations --dry-run --check
   - python manage.py test --noinput
+  - coverage run
+  - coverage xml
 
 after_success:
   - codecov
