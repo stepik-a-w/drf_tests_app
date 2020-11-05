@@ -9,7 +9,11 @@ from src.apps.books.models import Book
 
 class BookViewSetCreateTestCase(APITestCase):
     def setUp(self) -> None:
-        self.url = reverse('books:book-list')
+        self.author = User.objects.create(first_name='John', last_name='Maeda')
+
+    @classmethod
+    def setUpTestData(cls):
+        cls.url = reverse('books:book-list')
 
     def test_unauthorized(self):
         response = self.client.post(self.url)
@@ -17,13 +21,12 @@ class BookViewSetCreateTestCase(APITestCase):
         self.assertEqual(response.data, {'detail': 'Authentication credentials were not provided.'})
 
     def test(self):
-        author = User.objects.create(first_name='John', last_name='Maeda')
         data = {
-            'author': author.id,
+            'author': self.author.id,
             'title': 'The Laws of Simplicity',
             'text': 'Simplicity is about subtracting the obvious, and adding the meaningful.',
         }
-        self.client.force_login(author)
+        self.client.force_login(self.author)
         response = self.client.post(self.url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -34,12 +37,12 @@ class BookViewSetCreateTestCase(APITestCase):
 
 class BookViewSetListTestCase(APITestCase):
     def setUp(self) -> None:
-        self.url = reverse('books:book-list')
+        self.author = User.objects.create(first_name='test', last_name='test')
+        self.books = [Book.objects.create(title=f'book {b}', author=self.author, text=f'text {b}') for b in range(10)]
 
     @classmethod
     def setUpTestData(cls):
-        cls.author = User.objects.create(first_name='test', last_name='test')
-        cls.books = [Book.objects.create(title=f'book {b}', author=cls.author, text=f'text {b}') for b in range(10)]
+        cls.url = reverse('books:book-list')
 
     def test_unauthorized(self):
         response = self.client.post(self.url)
@@ -63,11 +66,10 @@ class BookViewSetListTestCase(APITestCase):
 
 
 class BookViewSetRetrieveTestCase(APITestCase):
-    @classmethod
-    def setUpTestData(cls):
-        cls.author = User.objects.create(first_name='test', last_name='test')
-        cls.book = Book.objects.create(title=f'book', author=cls.author, text=f'text')
-        cls.url = reverse('books:book-detail', kwargs={'pk': cls.book.id})
+    def setUp(self) -> None:
+        self.author = User.objects.create(first_name='test', last_name='test')
+        self.book = Book.objects.create(title=f'book', author=self.author, text=f'text')
+        self.url = reverse('books:book-detail', kwargs={'pk': self.book.id})  # url is not static
 
     def test_unauthorized(self):
         response = self.client.post(self.url)
