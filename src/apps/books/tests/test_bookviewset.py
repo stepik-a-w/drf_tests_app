@@ -26,7 +26,7 @@ class BookViewSetCreateTestCase(APITestCase):
             'title': 'The Laws of Simplicity',
             'text': 'Simplicity is about subtracting the obvious, and adding the meaningful.',
         }
-        self.client.force_login(self.author)
+        self.client.force_authenticate(self.author)
         response = self.client.post(self.url, data=data)
 
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -50,7 +50,7 @@ class BookViewSetListTestCase(APITestCase):
         self.assertEqual(response.data, {'detail': 'Authentication credentials were not provided.'})
 
     def test(self):
-        self.client.force_login(self.author)
+        self.client.force_authenticate(self.author)
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -77,7 +77,7 @@ class BookViewSetRetrieveTestCase(APITestCase):
         self.assertEqual(response.data, {'detail': 'Authentication credentials were not provided.'})
 
     def test(self):
-        self.client.force_login(self.author)
+        self.client.force_authenticate(self.author)
         response = self.client.get(self.url)
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
